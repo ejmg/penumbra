@@ -84,7 +84,7 @@ impl LightWallet for State {
             .height()
             .await
             .map_err(|_| tonic::Status::unavailable("database error"))?
-            .value() as u32;
+            .value();
 
         // Treat end_height = 0 as end_height = current_height so that if the
         // end_height is unspecified in the proto, it will be treated as a
@@ -104,7 +104,10 @@ impl LightWallet for State {
         );
 
         let stream = self
-            .compact_blocks(start_height.into(), end_height.into())
+            .compact_blocks(
+                start_height.try_into().unwrap(),
+                end_height.try_into().unwrap(),
+            )
             .map_err(|e| tonic::Status::internal(e.to_string()));
 
         Ok(tonic::Response::new(stream.boxed()))

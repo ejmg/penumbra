@@ -460,13 +460,13 @@ ON CONFLICT (id) DO UPDATE SET data = $1
         // will be different, forcing duplication of the entire function.
         let power_selector = if show_inactive { i64::MIN } else { 0i64 };
         let rows = query!(
-                "SELECT 
-                    validators.identity_key, 
-                    validators.voting_power, 
-                    validator_rates.epoch, 
-                    validator_rates.validator_reward_rate, 
+                "SELECT
+                    validators.identity_key,
+                    validators.voting_power,
+                    validator_rates.epoch,
+                    validator_rates.validator_reward_rate,
                     validator_rates.validator_exchange_rate,
-                    validators.validator_data 
+                    validators.validator_data
                 FROM (
                     validators INNER JOIN validator_rates ON validators.identity_key = validator_rates.identity_key
                 )
@@ -532,7 +532,7 @@ ON CONFLICT (id) DO UPDATE SET data = $1
 
             for height in start_height..=end_height {
                 let mut compact_block = CompactBlock {
-                    height: height as u32,
+                    height: height as u64,
                     fragments: vec![],
                     nullifiers: vec![],
                 };
